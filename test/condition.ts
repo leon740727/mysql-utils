@@ -6,11 +6,28 @@ declare const describe, it;
 describe('condition', () => {
     it('name = ? and id = ?', done => {
         const conds = [
-            Condition.make('name = ?', 'leon'),
-            Condition.make('id = ?', 27),
+            Condition.make('name = ?', ['leon']),
+            Condition.make('id = ?', [27]),
         ];
         const where = Condition.whereClause(conds);
         expect(where).eql("name = 'leon' and id = 27");
+        done();
+    });
+
+    it('name = ? or name = ?', done => {
+        const cond = Condition.make('name = ? or name = ?', ['leon', 'Leon']);
+        const where = Condition.whereClause([cond]);
+        expect(where).eql("name = 'leon' or name = 'Leon'");
+        done();
+    });
+
+    it('name in (?) or name in (?) and id in (?)', done => {
+        const conds = [
+            Condition.make('name in (?) or name in (?)', [['a','a'], ['b', 'b']]),
+            Condition.make('id in (?)', [[1,2]]),
+        ];
+        expect(Condition.whereClause(conds))
+        .eql("name in ('a', 'a') or name in ('b', 'b') and id in (1, 2)");
         done();
     });
 });

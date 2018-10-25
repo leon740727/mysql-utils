@@ -16,20 +16,20 @@ export function initdb <T> (dbSetting, handler: (conn) => Promise<T>): Promise<T
 }
 
 export class Condition {
-    constructor (public clause: string, public value?: any) {}
+    constructor (public clause: string, public values?: any[]) {}
 
     get onlyClause (): boolean {
-        return this.value === undefined;
+        return this.values === undefined;
     }
 
     get matchNothing (): boolean {
         return ! this.onlyClause &&
             this.clause.match(/ in /) &&
-            this.value instanceof Array && this.value.length === 0;
+            this.values.length === 0;
     }
 
-    static make (clause: string, value?: any) {
-        return new Condition(clause, value);
+    static make (clause: string, values?: any[]) {
+        return new Condition(clause, values);
     }
 
     static whereClause (conditions: Condition[]): string {
@@ -42,7 +42,9 @@ export class Condition {
                 return '1 = 0';
             } else {
                 const sql = conditions.map(c => c.clause).join(' and ');
-                const args = conditions.filter(c => ! c.onlyClause).map(c => c.value);
+                const args = conditions.filter(c => ! c.onlyClause)
+                    .map(cond => cond.values)
+                    .reduce((acc, i) => acc.concat(i));
                 return mysql.format(sql, args);
             }
         }

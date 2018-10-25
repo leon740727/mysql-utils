@@ -1,11 +1,11 @@
 export declare function initdb<T>(dbSetting: any, handler: (conn: any) => Promise<T>): Promise<T>;
 export declare class Condition {
     clause: string;
-    value?: any;
-    constructor(clause: string, value?: any);
+    values?: any[];
+    constructor(clause: string, values?: any[]);
     readonly onlyClause: boolean;
     readonly matchNothing: boolean;
-    static make(clause: string, value?: any): Condition;
+    static make(clause: string, values?: any[]): Condition;
     static whereClause(conditions: Condition[]): string;
 }
 export declare function query(conn: any, sql: string, arg: any): Promise<[any, any]>;

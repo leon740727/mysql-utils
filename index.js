@@ -17,20 +17,20 @@ function initdb(dbSetting, handler) {
 }
 exports.initdb = initdb;
 class Condition {
-    constructor(clause, value) {
+    constructor(clause, values) {
         this.clause = clause;
-        this.value = value;
+        this.values = values;
     }
     get onlyClause() {
-        return this.value === undefined;
+        return this.values === undefined;
     }
     get matchNothing() {
         return !this.onlyClause &&
             this.clause.match(/ in /) &&
-            this.value instanceof Array && this.value.length === 0;
+            this.values.length === 0;
     }
-    static make(clause, value) {
-        return new Condition(clause, value);
+    static make(clause, values) {
+        return new Condition(clause, values);
     }
     static whereClause(conditions) {
         if (conditions.length === 0) {
@@ -44,7 +44,9 @@ class Condition {
             }
             else {
                 const sql = conditions.map(c => c.clause).join(' and ');
-                const args = conditions.filter(c => !c.onlyClause).map(c => c.value);
+                const args = conditions.filter(c => !c.onlyClause)
+                    .map(cond => cond.values)
+                    .reduce((acc, i) => acc.concat(i));
                 return mysql.format(sql, args);
             }
         }
