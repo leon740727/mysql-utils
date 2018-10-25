@@ -5,6 +5,7 @@
         "module": "commonjs"
     },
     "files": [
-        "index.ts"
+        "index.ts",
+        "test/condition.ts",
     ]
 }
