@@ -1,5 +1,7 @@
 import mysql = require('mysql');
 
+type Primitive = string | number | boolean | Date;
+
 export function initdb <T> (dbSetting, handler: (conn) => Promise<T>): Promise<T> {
     const conn = mysql.createConnection(dbSetting);
     conn.connect();
@@ -16,7 +18,7 @@ export function initdb <T> (dbSetting, handler: (conn) => Promise<T>): Promise<T
 }
 
 export class Condition {
-    constructor (public clause: string, public values?: any[]) {}
+    constructor (public clause: string, public values?: Primitive[]) {}
 
     get onlyClause (): boolean {
         return this.values === undefined;
@@ -28,7 +30,7 @@ export class Condition {
             this.values.length === 0;
     }
 
-    static make (clause: string, values?: any[]) {
+    static make (clause: string, values?: Primitive[]) {
         return new Condition(clause, values);
     }
 
@@ -51,9 +53,9 @@ export class Condition {
     }
 }
 
-export function query (conn, sql: string, arg): Promise<[any, any]> {
+export function query (conn, sql: string, args: Primitive[]): Promise<[any, any]> {
     return new Promise((resolve, reject) => {
-        conn.query(sql, arg, (error, rows, fields) => {
+        conn.query(sql, args, (error, rows, fields) => {
             if (error) {
                 reject(error);
             } else {
@@ -73,7 +75,7 @@ export function update (conn, sql: string, arg): Promise<number> {
 
 class Conn {
     constructor (private conn) {}
-    query (sql: string, args: any[], cb: (error, rows, fields) => any) {
+    query (sql: string, args: Primitive[], cb: (error, rows, fields) => any) {
         this.conn.query(sql, args, cb);
     }
 }

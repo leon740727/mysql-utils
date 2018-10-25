@@ -53,9 +53,9 @@ class Condition {
     }
 }
 exports.Condition = Condition;
-function query(conn, sql, arg) {
+function query(conn, sql, args) {
     return new Promise((resolve, reject) => {
-        conn.query(sql, arg, (error, rows, fields) => {
+        conn.query(sql, args, (error, rows, fields) => {
             if (error) {
                 reject(error);
             }
