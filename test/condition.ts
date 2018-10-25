@@ -14,6 +14,13 @@ describe('condition', () => {
         done();
     });
 
+    it('name is null', () => {
+        const conds = [
+            Condition.make('name is ?', [null]),
+        ];
+        expect(Condition.whereClause(conds)).eql('name is NULL');
+    });
+
     it('name = ? or name = ?', done => {
         const cond = Condition.make('name = ? or name = ?', ['leon', 'Leon']);
         const where = Condition.whereClause([cond]);

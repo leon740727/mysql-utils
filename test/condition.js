@@ -12,6 +12,12 @@ describe('condition', () => {
         chai_1.expect(where).eql("name = 'leon' and id = 27");
         done();
     });
+    it('name is null', () => {
+        const conds = [
+            index_1.Condition.make('name is ?', [null]),
+        ];
+        chai_1.expect(index_1.Condition.whereClause(conds)).eql('name is NULL');
+    });
     it('name = ? or name = ?', done => {
         const cond = index_1.Condition.make('name = ? or name = ?', ['leon', 'Leon']);
         const where = index_1.Condition.whereClause([cond]);
