@@ -53,9 +53,9 @@ class Condition {
     }
 }
 exports.Condition = Condition;
-function query(conn, sql, args) {
+function query(conn, sql, arg) {
     return new Promise((resolve, reject) => {
-        conn.query(sql, args, (error, rows, fields) => {
+        conn.query(sql, arg, (error, rows, fields) => {
             if (error) {
                 reject(error);
             }
@@ -75,8 +75,8 @@ class Conn {
     constructor(conn) {
         this.conn = conn;
     }
-    query(sql, args, cb) {
-        this.conn.query(sql, args, cb);
+    query(sql, arg, cb) {
+        this.conn.query(sql, arg, cb);
     }
 }
 /** 允許 nested transaction。但是內層的 transaction 都不發生作用 */

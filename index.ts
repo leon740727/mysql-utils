@@ -54,9 +54,9 @@ export class Condition {
     }
 }
 
-export function query (conn, sql: string, args: Argument[]): Promise<[any, any]> {
+export function query (conn, sql: string, arg): Promise<[any, any]> {
     return new Promise((resolve, reject) => {
-        conn.query(sql, args, (error, rows, fields) => {
+        conn.query(sql, arg, (error, rows, fields) => {
             if (error) {
                 reject(error);
             } else {
@@ -76,8 +76,8 @@ export function update (conn, sql: string, arg): Promise<number> {
 
 class Conn {
     constructor (private conn) {}
-    query (sql: string, args: Argument[], cb: (error, rows, fields) => any) {
-        this.conn.query(sql, args, cb);
+    query (sql: string, arg: any, cb: (error, rows, fields) => any) {
+        this.conn.query(sql, arg, cb);
     }
 }
 
