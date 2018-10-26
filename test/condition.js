@@ -18,6 +18,13 @@ describe('condition', () => {
         ];
         chai_1.expect(index_1.Condition.whereClause(conds)).eql('name is NULL');
     });
+    it('"name in ()" should be "1 = 0"', () => {
+        const conds = [
+            index_1.Condition.make('name in (?)', [[]]),
+            index_1.Condition.make('id = ?', [5]),
+        ];
+        chai_1.expect(index_1.Condition.whereClause(conds)).eql('1 = 0');
+    });
     it('name = ? or name = ?', done => {
         const cond = index_1.Condition.make('name = ? or name = ?', ['leon', 'Leon']);
         const where = index_1.Condition.whereClause([cond]);

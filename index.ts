@@ -26,9 +26,14 @@ export class Condition {
     }
 
     get matchNothing (): boolean {
-        return ! this.onlyClause &&
-            this.clause.match(/ in /) &&
-            this.values.length === 0;
+        if (this.onlyClause) return false;
+        if (this.clause.match(/\?/g).length === 1 && this.values.length === 1) {
+            const v = this.values[0];
+            if (this.clause.match(/ in /) && v instanceof Array && v.length === 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     static make (clause: string, values?: Argument[]) {
