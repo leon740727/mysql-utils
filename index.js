@@ -52,7 +52,7 @@ class Condition {
                 const sql = conditions.map(c => c.clause).join(' and ');
                 const args = conditions.filter(c => !c.onlyClause)
                     .map(cond => cond.values)
-                    .reduce((acc, i) => acc.concat(i));
+                    .reduce((acc, i) => acc.concat(i), []);
                 return mysql.format(sql, args);
             }
         }
